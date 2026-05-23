@@ -29,7 +29,7 @@ controls.dampingFactor = 0.05;
 controls.enablePan = false;
 controls.enableZoom = false;
 controls.autoRotate = true;
-controls.autoRotateSpeed = 0.22;
+controls.autoRotateSpeed = 6;
 controls.target.set(0, 0, 0);
 
 const keyLight = new THREE.DirectionalLight(0xffffff, 3.2);
