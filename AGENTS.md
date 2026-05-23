@@ -15,8 +15,8 @@ Build a single-page web app that presents the CIA Energy drink can model as the 
 ## Asset Workflow
 
 - Blender source file: `assets/blender/cia-energy.blend`.
-- Web model file: `public/models/freshup.glb`.
-- If the Blender source changes, re-export a GLB and replace `public/models/freshup.glb`.
+- Web model file: `public/models/cia-energy.glb`.
+- If the Blender source changes, re-export a GLB and replace `public/models/cia-energy.glb`.
 - Do not load `.blend` files in the browser.
 
 ## Design Direction

@@ -52,7 +52,7 @@ scene.add(root);
 
 const loader = new GLTFLoader();
 loader.load(
-  `${import.meta.env.BASE_URL}models/freshup.glb`,
+  `${import.meta.env.BASE_URL}models/cia-energy.glb`,
   (gltf) => {
     root.add(gltf.scene);
     frameModel(gltf.scene);

@@ -19,4 +19,4 @@ The app uses Vite with `base: './'`, so the production build works from a GitHub
 
 ## Asset
 
-The Blender source lives at `assets/blender/cia-energy.blend`. Re-export the Blender source to the web model path when the model changes.
+The Blender source lives at `assets/blender/cia-energy.blend`. The web model lives at `public/models/cia-energy.glb`; re-export the Blender source to that path when the model changes.
