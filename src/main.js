@@ -6,7 +6,10 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 const canvas = document.querySelector('#scene');
 const particlesCanvas = document.querySelector('#particles');
 const particlesContext = particlesCanvas.getContext('2d');
+const entry = document.querySelector('#entry');
 const status = document.querySelector('#status');
+const openSound = new Audio(`${import.meta.env.BASE_URL}audio/can-open.mp3`);
+openSound.preload = 'auto';
 
 const scene = new THREE.Scene();
 
@@ -56,6 +59,14 @@ scene.add(ambientLight);
 const root = new THREE.Group();
 scene.add(root);
 let particles = [];
+let isModelReady = false;
+let isMinimumTimeDone = false;
+let hasEntered = false;
+
+setTimeout(() => {
+  isMinimumTimeDone = true;
+  updateEntryState();
+}, 1000);
 
 const loader = new GLTFLoader();
 loader.load(
@@ -63,13 +74,42 @@ loader.load(
   (gltf) => {
     root.add(gltf.scene);
     frameModel(gltf.scene);
-    status.hidden = true;
+    isModelReady = true;
+    updateEntryState();
   },
   undefined,
   () => {
     status.textContent = 'Render failed to load';
+    entry.classList.add('entry--error');
   },
 );
+
+entry.addEventListener('click', () => {
+  if (!isModelReady || hasEntered) {
+    return;
+  }
+
+  hasEntered = true;
+  entry.disabled = true;
+  entry.classList.add('entry--leaving');
+
+  openSound.currentTime = 0;
+  openSound.play().catch(() => {});
+
+  setTimeout(() => {
+    entry.hidden = true;
+  }, 800);
+});
+
+function updateEntryState() {
+  if (!isModelReady || !isMinimumTimeDone || hasEntered) {
+    return;
+  }
+
+  status.textContent = 'Click to enter';
+  entry.disabled = false;
+  entry.classList.add('entry--ready');
+}
 
 function frameModel(model) {
   const box = new THREE.Box3().setFromObject(model);
