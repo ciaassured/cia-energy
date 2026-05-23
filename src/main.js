@@ -46,6 +46,10 @@ const rimLight = new THREE.DirectionalLight(0xd8f0ff, 1.8);
 rimLight.position.set(0, 3, -5);
 scene.add(rimLight);
 
+const underLight = new THREE.DirectionalLight(0xe6fbff, 1.8);
+underLight.position.set(0, -4, 3);
+scene.add(underLight);
+
 const ambientLight = new THREE.HemisphereLight(0xf4fbff, 0x004e76, 2.1);
 scene.add(ambientLight);
 
