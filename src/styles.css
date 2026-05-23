@@ -124,26 +124,35 @@ body {
   cursor: default;
 }
 
-.entry__brand,
 .entry__prompt {
   position: relative;
   display: block;
   text-align: center;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-}
-
-.entry__brand {
-  margin-bottom: 0.85rem;
-  font-size: clamp(2.4rem, 8vw, 6.5rem);
-  font-weight: 700;
-  line-height: 0.95;
 }
 
 .entry__prompt {
   color: rgba(247, 252, 255, 0.74);
-  font-size: clamp(0.78rem, 1.6vw, 0.95rem);
-  font-weight: 600;
+  font-size: clamp(0.85rem, 1.8vw, 1.1rem);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-shadow: 0 0 1.8rem rgba(247, 252, 255, 0.36);
+  transition:
+    color 180ms ease,
+    letter-spacing 180ms ease,
+    text-shadow 180ms ease,
+    transform 180ms ease;
+  animation: prompt-float 2.4s ease-in-out infinite;
+}
+
+.entry--ready:hover .entry__prompt,
+.entry--ready:focus-visible .entry__prompt {
+  color: #ffffff;
+  letter-spacing: 0.28em;
+  text-shadow:
+    0 0 1rem rgba(247, 252, 255, 0.72),
+    0 0 2.4rem rgba(133, 234, 255, 0.52);
+  transform: scale(1.04);
 }
 
 @keyframes pulse-ring {
@@ -156,5 +165,16 @@ body {
   50% {
     opacity: 0.9;
     transform: scale(1.04);
+  }
+}
+
+@keyframes prompt-float {
+  0%,
+  100% {
+    opacity: 0.72;
+  }
+
+  50% {
+    opacity: 1;
   }
 }
