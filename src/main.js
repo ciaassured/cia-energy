@@ -27,10 +27,9 @@ const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.05;
 controls.enablePan = false;
+controls.enableZoom = false;
 controls.autoRotate = true;
 controls.autoRotateSpeed = 0.22;
-controls.minDistance = 2;
-controls.maxDistance = 12;
 controls.target.set(0, 0, 0);
 
 const keyLight = new THREE.DirectionalLight(0xffffff, 3.2);
@@ -78,7 +77,7 @@ function frameModel(model) {
   model.scale.setScalar(scale);
 
   controls.target.set(0, 0, 0);
-  camera.position.set(0, 0.35, 5.3);
+  camera.position.set(0, 0.8, 12);
   camera.near = 0.01;
   camera.far = 100;
   camera.updateProjectionMatrix();
