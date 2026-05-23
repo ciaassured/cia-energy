@@ -1,5 +1,6 @@
 import './styles.css';
 import * as THREE from 'three';
+import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
@@ -26,7 +27,12 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor(0x000000, 0);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.1;
+renderer.toneMappingExposure = 1.28;
+
+const environment = new RoomEnvironment();
+const pmremGenerator = new THREE.PMREMGenerator(renderer);
+scene.environment = pmremGenerator.fromScene(environment).texture;
+environment.dispose();
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
@@ -37,11 +43,11 @@ controls.autoRotate = true;
 controls.autoRotateSpeed = 6;
 controls.target.set(0, 0, 0);
 
-const keyLight = new THREE.DirectionalLight(0xffffff, 3.2);
+const keyLight = new THREE.DirectionalLight(0xffffff, 2.4);
 keyLight.position.set(4, 5, 5);
 scene.add(keyLight);
 
-const fillLight = new THREE.DirectionalLight(0xe8f9ff, 1.65);
+const fillLight = new THREE.DirectionalLight(0xe8f9ff, 2.2);
 fillLight.position.set(-4, 2, 3);
 scene.add(fillLight);
 
@@ -49,11 +55,15 @@ const rimLight = new THREE.DirectionalLight(0xd8f0ff, 1.8);
 rimLight.position.set(0, 3, -5);
 scene.add(rimLight);
 
-const underLight = new THREE.DirectionalLight(0xe6fbff, 1.8);
+const frontLight = new THREE.DirectionalLight(0xffffff, 1.1);
+frontLight.position.set(0, 1, 6);
+scene.add(frontLight);
+
+const underLight = new THREE.DirectionalLight(0xe6fbff, 2.1);
 underLight.position.set(0, -4, 3);
 scene.add(underLight);
 
-const ambientLight = new THREE.HemisphereLight(0xf4fbff, 0x004e76, 2.1);
+const ambientLight = new THREE.HemisphereLight(0xf4fbff, 0x0087bf, 3.25);
 scene.add(ambientLight);
 
 const root = new THREE.Group();
@@ -122,6 +132,7 @@ function frameModel(model) {
   const targetHeight = 3.4;
   const scale = targetHeight / maxDimension;
   model.scale.setScalar(scale);
+  model.position.y -= 1.25;
 
   controls.target.set(0, 0, 0);
   camera.position.set(0, 0.8, 12);

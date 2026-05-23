@@ -14,7 +14,8 @@ Build a single-page web app that presents the CIA Energy drink can model as the 
 
 ## Asset Workflow
 
-- Blender source file: `assets/blender/cia-energy.blend`.
+- Blender source file: `assets/blender/redbull-energy-drink.blend`.
+- BlenderKit asset base ID: `513f59ae-3148-4a66-a0cb-d95081ea1ead`.
 - Web model file: `public/models/cia-energy.glb`.
 - If the Blender source changes, re-export a GLB and replace `public/models/cia-energy.glb`.
 - Do not load `.blend` files in the browser.
