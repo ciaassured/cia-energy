@@ -2,7 +2,7 @@
 
 ## Project Goal
 
-Build a single-page web app that presents the Freshup 3D can model as the main experience. The model should sit centered on the page, rotate very slowly by default, and allow pointer/touch camera orbit controls similar to moving around a model in Blender.
+Build a single-page web app that presents the CIA Energy drink can model as the main experience. The model should sit centered on the page, rotate very slowly by default, and allow pointer/touch camera orbit controls similar to moving around a model in Blender.
 
 ## Stack
 
@@ -14,7 +14,7 @@ Build a single-page web app that presents the Freshup 3D can model as the main e
 
 ## Asset Workflow
 
-- Blender source file: `Z:\YOUTUBE\ASSETS\Freshup\Blender\drink.blend`.
+- Blender source file: `assets/blender/cia-energy.blend`.
 - Web model file: `public/models/freshup.glb`.
 - If the Blender source changes, re-export a GLB and replace `public/models/freshup.glb`.
 - Do not load `.blend` files in the browser.
@@ -34,4 +34,4 @@ Build a single-page web app that presents the Freshup 3D can model as the main e
 ## Git
 
 - Use Conventional Commits for commit messages.
-- Prefer concise messages such as `feat: create Freshup 3D viewer` or `chore: update deployment workflow`.
+- Prefer concise messages such as `feat: create CIA Energy 3D viewer` or `chore: update deployment workflow`.
