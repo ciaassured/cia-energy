@@ -3,5 +3,4 @@ dist/
 .vite/
 .DS_Store
 *.local
-/freshup.glb
 notes.md
