@@ -27,15 +27,24 @@ body {
 }
 
 #app {
+  --scene-primary: #00a1dc;
+  --scene-mid: #0079b4;
+  --scene-dark: #003f72;
+  --scene-core: rgba(0, 84, 142, 0.4);
+  --scene-glow: rgba(121, 226, 255, 0.36);
+  --scene-shadow: rgba(0, 61, 112, 0.52);
+  --particle-rgb: 218, 247, 255;
+
   position: relative;
   min-height: 100vh;
   overflow: hidden;
   background:
     radial-gradient(circle at 50% 46%, rgba(255, 255, 255, 0.24), transparent 13rem),
-    radial-gradient(circle at 50% 50%, rgba(0, 84, 142, 0.4), transparent 26rem),
-    radial-gradient(circle at 18% 15%, rgba(121, 226, 255, 0.36), transparent 28rem),
-    radial-gradient(circle at 84% 82%, rgba(0, 61, 112, 0.52), transparent 30rem),
-    linear-gradient(145deg, #00a8e1 0%, #0079b4 43%, #003f72 100%);
+    radial-gradient(circle at 50% 50%, var(--scene-core), transparent 26rem),
+    radial-gradient(circle at 18% 15%, var(--scene-glow), transparent 28rem),
+    radial-gradient(circle at 84% 82%, var(--scene-shadow), transparent 30rem),
+    linear-gradient(145deg, var(--scene-primary) 0%, var(--scene-mid) 43%, var(--scene-dark) 100%);
+  transition: background 520ms ease;
 }
 
 #app::after {

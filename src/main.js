@@ -11,6 +11,38 @@ const entry = document.querySelector('#entry');
 const status = document.querySelector('#status');
 const openSound = new Audio(`${import.meta.env.BASE_URL}audio/can-open.mp3`);
 openSound.preload = 'auto';
+const swooshSound = new Audio(`${import.meta.env.BASE_URL}audio/swoosh.mp3`);
+swooshSound.preload = 'auto';
+const app = document.querySelector('#app');
+
+const cans = [
+  {
+    model: 'models/cia-energy.glb',
+    theme: {
+      name: 'adblue',
+      primary: '#00a1dc',
+      mid: '#0079b4',
+      dark: '#003f72',
+      core: 'rgba(0, 84, 142, 0.4)',
+      glow: 'rgba(121, 226, 255, 0.36)',
+      shadow: 'rgba(0, 61, 112, 0.52)',
+      particle: '218, 247, 255',
+    },
+  },
+  {
+    model: 'models/cia-energy-91.glb',
+    theme: {
+      name: '91',
+      primary: '#009b3a',
+      mid: '#007b31',
+      dark: '#00491f',
+      core: 'rgba(0, 86, 34, 0.4)',
+      glow: 'rgba(108, 236, 152, 0.34)',
+      shadow: 'rgba(0, 62, 28, 0.52)',
+      particle: '216, 255, 228',
+    },
+  },
+];
 
 const scene = new THREE.Scene();
 
@@ -69,6 +101,8 @@ scene.add(ambientLight);
 const root = new THREE.Group();
 scene.add(root);
 let particles = [];
+let activeCanIndex = 0;
+let wheelLock = false;
 let isModelReady = false;
 let isMinimumTimeDone = false;
 let hasEntered = false;
@@ -79,20 +113,33 @@ setTimeout(() => {
 }, 1000);
 
 const loader = new GLTFLoader();
-loader.load(
-  `${import.meta.env.BASE_URL}models/cia-energy.glb`,
-  (gltf) => {
-    root.add(gltf.scene);
-    frameModel(gltf.scene);
-    isModelReady = true;
-    updateEntryState();
-  },
-  undefined,
-  () => {
-    status.textContent = 'Render failed to load';
-    entry.classList.add('entry--error');
-  },
-);
+Promise.all(cans.map(loadCan)).then((models) => {
+  models.forEach((model, index) => {
+    cans[index].scene = model;
+    model.visible = index === activeCanIndex;
+    root.add(model);
+    frameModel(model);
+  });
+
+  setActiveCan(0);
+  isModelReady = true;
+  updateEntryState();
+}).catch(() => {
+  status.textContent = 'Render failed to load';
+  entry.classList.add('entry--error');
+});
+
+window.addEventListener('wheel', (event) => {
+  if (!isModelReady || wheelLock || Math.abs(event.deltaY) < 8) {
+    return;
+  }
+
+  event.preventDefault();
+  wheelLock = true;
+  const direction = event.deltaY > 0 ? 1 : -1;
+  setActiveCan(activeCanIndex + direction);
+  playSwoosh().finally(unlockWheelAfterSwoosh);
+}, { passive: false });
 
 entry.addEventListener('click', () => {
   if (!isModelReady || hasEntered) {
@@ -119,6 +166,97 @@ function updateEntryState() {
   status.textContent = 'Click to enter';
   entry.disabled = false;
   entry.classList.add('entry--ready');
+}
+
+function loadCan(can) {
+  return new Promise((resolve, reject) => {
+    loader.load(
+      `${import.meta.env.BASE_URL}${can.model}`,
+      (gltf) => {
+        sharpenModelTextures(gltf.scene);
+        resolve(gltf.scene);
+      },
+      undefined,
+      reject,
+    );
+  });
+}
+
+function setActiveCan(index) {
+  activeCanIndex = (index + cans.length) % cans.length;
+
+  cans.forEach((can, canIndex) => {
+    if (can.scene) {
+      can.scene.visible = canIndex === activeCanIndex;
+    }
+  });
+
+  applyTheme(cans[activeCanIndex].theme);
+}
+
+function playSwoosh() {
+  swooshSound.currentTime = 0;
+  return swooshSound.play().catch(() => {});
+}
+
+function unlockWheelAfterSwoosh() {
+  const duration = Number.isFinite(swooshSound.duration) ? swooshSound.duration * 1000 : 650;
+
+  setTimeout(() => {
+    wheelLock = false;
+  }, Math.max(duration, 320));
+}
+
+function applyTheme(theme) {
+  app.style.setProperty('--scene-primary', theme.primary);
+  app.style.setProperty('--scene-mid', theme.mid);
+  app.style.setProperty('--scene-dark', theme.dark);
+  app.style.setProperty('--scene-core', theme.core);
+  app.style.setProperty('--scene-glow', theme.glow);
+  app.style.setProperty('--scene-shadow', theme.shadow);
+  app.style.setProperty('--particle-rgb', theme.particle);
+  app.dataset.can = theme.name;
+}
+
+function sharpenModelTextures(model) {
+  const maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
+  const textureProperties = [
+    'map',
+    'normalMap',
+    'roughnessMap',
+    'metalnessMap',
+    'aoMap',
+    'emissiveMap',
+    'alphaMap',
+  ];
+
+  model.traverse((object) => {
+    if (!object.isMesh) {
+      return;
+    }
+
+    const materials = Array.isArray(object.material) ? object.material : [object.material];
+
+    for (const material of materials) {
+      if (!material) {
+        continue;
+      }
+
+      for (const property of textureProperties) {
+        const texture = material[property];
+
+        if (!texture?.isTexture) {
+          continue;
+        }
+
+        texture.anisotropy = maxAnisotropy;
+        texture.generateMipmaps = true;
+        texture.minFilter = THREE.LinearMipmapLinearFilter;
+        texture.magFilter = THREE.LinearFilter;
+        texture.needsUpdate = true;
+      }
+    }
+  });
 }
 
 function frameModel(model) {
@@ -178,7 +316,7 @@ function drawParticles(time) {
     const y = particle.y + Math.cos(time * particle.speed * 0.78 + particle.drift) * 26 * particle.depth;
 
     particlesContext.beginPath();
-    particlesContext.fillStyle = `rgba(218, 247, 255, ${particle.alpha})`;
+    particlesContext.fillStyle = `rgba(${getComputedStyle(app).getPropertyValue('--particle-rgb')}, ${particle.alpha})`;
     particlesContext.arc(x, y, particle.radius * particle.depth, 0, Math.PI * 2);
     particlesContext.fill();
   }
