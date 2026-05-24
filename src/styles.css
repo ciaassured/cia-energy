@@ -257,7 +257,7 @@ body {
   appearance: none;
   background: transparent;
   border: 0;
-  cursor: default;
+  cursor: pointer;
   font: inherit;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -272,9 +272,18 @@ body {
 }
 
 .scroll-hint--visible {
+  pointer-events: auto;
   opacity: 1;
   transform: translate(-50%, 0);
   animation: scroll-hint-drift 3.8s ease-in-out infinite;
+}
+
+.scroll-hint:hover,
+.scroll-hint:focus-visible {
+  color: #ffffff;
+  text-shadow:
+    0 0 1rem rgba(247, 252, 255, 0.62),
+    0 0 2rem rgba(var(--particle-rgb), 0.34);
 }
 
 .scroll-hint--used {
@@ -424,7 +433,6 @@ body {
       0 0.8rem 2rem rgba(0, 26, 49, 0.18),
       inset 0 0 1rem rgba(247, 252, 255, 0.08);
     letter-spacing: 0.12em;
-    pointer-events: auto;
     touch-action: manipulation;
   }
 
