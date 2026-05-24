@@ -266,8 +266,10 @@ body {
   opacity: 0;
   transform: translate(-50%, 0.75rem);
   transition:
+    color 360ms ease,
     opacity 420ms ease,
     filter 420ms ease,
+    text-shadow 360ms ease,
     transform 420ms ease;
 }
 
@@ -284,6 +286,7 @@ body {
   text-shadow:
     0 0 1rem rgba(247, 252, 255, 0.62),
     0 0 2rem rgba(var(--particle-rgb), 0.34);
+  transform: translate(-50%, -0.08rem) scale(1.02);
 }
 
 .scroll-hint--used {
