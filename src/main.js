@@ -10,6 +10,7 @@ const particlesContext = particlesCanvas.getContext('2d');
 const entry = document.querySelector('#entry');
 const status = document.querySelector('#status');
 const scrollHint = document.querySelector('#scroll-hint');
+const scrollHintText = scrollHint.querySelector('.scroll-hint__text');
 const currentBackground = document.querySelector('#scene-bg-current');
 const nextBackground = document.querySelector('#scene-bg-next');
 const favicon = document.querySelector('link[rel="icon"]');
@@ -51,6 +52,7 @@ const cans = [
 ];
 
 const scene = new THREE.Scene();
+const touchQuery = window.matchMedia('(hover: none), (pointer: coarse)');
 
 const camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.01, 1000);
 camera.position.set(0, 0.8, 6);
@@ -137,18 +139,22 @@ Promise.all(cans.map(loadCan)).then((models) => {
   entry.classList.add('entry--error');
 });
 
+touchQuery.addEventListener('change', updateInputCopy);
+updateInputCopy();
+
 window.addEventListener('wheel', (event) => {
-  if (!isModelReady || wheelLock || Math.abs(event.deltaY) < 8) {
+  if (!isModelReady || Math.abs(event.deltaY) < 8) {
     return;
   }
 
   event.preventDefault();
-  wheelLock = true;
   const direction = event.deltaY > 0 ? 1 : -1;
-  setActiveCan(activeCanIndex + direction);
-  pulseScrollHint();
-  playSwoosh().finally(unlockWheelAfterSwoosh);
+  requestCanSwitch(direction);
 }, { passive: false });
+
+scrollHint.addEventListener('click', () => {
+  requestCanSwitch(1);
+});
 
 entry.addEventListener('click', () => {
   if (!isModelReady || hasEntered) {
@@ -173,9 +179,22 @@ function updateEntryState() {
     return;
   }
 
-  status.textContent = 'Click to enter';
+  status.textContent = getEntryPrompt();
   entry.disabled = false;
   entry.classList.add('entry--ready');
+}
+
+function updateInputCopy() {
+  scrollHintText.textContent = touchQuery.matches ? 'Next can' : 'Scroll';
+  scrollHint.setAttribute('aria-label', touchQuery.matches ? 'Switch to next can' : 'Scroll to switch cans');
+
+  if (isModelReady && isMinimumTimeDone && !hasEntered) {
+    status.textContent = getEntryPrompt();
+  }
+}
+
+function getEntryPrompt() {
+  return touchQuery.matches ? 'Tap to enter' : 'Click to enter';
 }
 
 function loadCan(can) {
@@ -208,6 +227,17 @@ function setActiveCan(index) {
 function playSwoosh() {
   swooshSound.currentTime = 0;
   return swooshSound.play().catch(() => {});
+}
+
+function requestCanSwitch(direction) {
+  if (!isModelReady || wheelLock) {
+    return;
+  }
+
+  wheelLock = true;
+  setActiveCan(activeCanIndex + direction);
+  pulseScrollHint();
+  playSwoosh().finally(unlockWheelAfterSwoosh);
 }
 
 function unlockWheelAfterSwoosh() {

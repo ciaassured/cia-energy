@@ -41,6 +41,18 @@ body {
   background: var(--scene-dark);
 }
 
+@supports (height: 100svh) {
+  html,
+  body,
+  #app {
+    height: 100svh;
+  }
+
+  #app {
+    min-height: 100svh;
+  }
+}
+
 .scene-bg,
 #app::after,
 #app::before {
@@ -126,13 +138,19 @@ body {
 
 .scroll-hint {
   position: absolute;
-  bottom: clamp(1.35rem, 4vh, 2.6rem);
+  bottom: calc(clamp(1.35rem, 4vh, 2.6rem) + env(safe-area-inset-bottom, 0px));
   left: 50%;
   z-index: 3;
   display: grid;
   justify-items: center;
   gap: 0.42rem;
+  padding: 0;
   color: rgba(247, 252, 255, 0.76);
+  appearance: none;
+  background: transparent;
+  border: 0;
+  cursor: default;
+  font: inherit;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   text-shadow: 0 0 1.4rem rgba(247, 252, 255, 0.32);
@@ -185,6 +203,7 @@ body {
 .scroll-hint__text {
   font-size: 0.68rem;
   font-weight: 700;
+  white-space: nowrap;
 }
 
 .entry {
@@ -194,6 +213,11 @@ body {
   display: grid;
   place-items: center;
   padding: 2rem;
+  padding:
+    max(2rem, env(safe-area-inset-top, 0px))
+    max(2rem, env(safe-area-inset-right, 0px))
+    max(2rem, env(safe-area-inset-bottom, 0px))
+    max(2rem, env(safe-area-inset-left, 0px));
   color: #f7fcff;
   appearance: none;
   cursor: wait;
@@ -206,6 +230,48 @@ body {
     opacity 760ms ease,
     filter 760ms ease,
     transform 760ms ease;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .scroll-hint {
+    bottom: calc(1.15rem + env(safe-area-inset-bottom, 0px));
+    min-width: 7.75rem;
+    min-height: 2.75rem;
+    place-items: center;
+    padding: 0.82rem 1rem;
+    color: rgba(247, 252, 255, 0.88);
+    background: rgba(0, 32, 58, 0.2);
+    border: 1px solid rgba(247, 252, 255, 0.24);
+    border-radius: 999px;
+    box-shadow:
+      0 0.8rem 2rem rgba(0, 26, 49, 0.18),
+      inset 0 0 1rem rgba(247, 252, 255, 0.08);
+    letter-spacing: 0.12em;
+    pointer-events: auto;
+    touch-action: manipulation;
+  }
+
+  .scroll-hint--visible {
+    animation: none;
+  }
+
+  .scroll-hint__mouse {
+    display: none;
+  }
+
+  .scroll-hint__text {
+    font-size: 0.72rem;
+  }
+
+  .entry__prompt {
+    font-size: clamp(0.82rem, 4vw, 1rem);
+    letter-spacing: 0.16em;
+  }
+
+  .entry--ready:hover .entry__prompt,
+  .entry--ready:focus-visible .entry__prompt {
+    letter-spacing: 0.18em;
+  }
 }
 
 .entry::before {
