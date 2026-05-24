@@ -10,6 +10,12 @@
     <main id="app">
       <canvas id="particles" aria-hidden="true"></canvas>
       <canvas id="scene" aria-label="Interactive 3D CIA Energy can render"></canvas>
+      <div class="scroll-hint" id="scroll-hint" aria-hidden="true">
+        <span class="scroll-hint__mouse">
+          <span class="scroll-hint__wheel"></span>
+        </span>
+        <span class="scroll-hint__text">Scroll</span>
+      </div>
       <button class="entry" id="entry" type="button" disabled>
         <span class="entry__prompt" id="status">Loading render</span>
       </button>

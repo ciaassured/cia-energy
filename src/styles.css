@@ -82,6 +82,68 @@ body {
 #scene:active {
   cursor: grabbing;
 }
+.scroll-hint {
+  position: absolute;
+  bottom: clamp(1.35rem, 4vh, 2.6rem);
+  left: 50%;
+  z-index: 3;
+  display: grid;
+  justify-items: center;
+  gap: 0.42rem;
+  color: rgba(247, 252, 255, 0.76);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-shadow: 0 0 1.4rem rgba(247, 252, 255, 0.32);
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, 0.75rem);
+  transition:
+    opacity 420ms ease,
+    filter 420ms ease,
+    transform 420ms ease;
+}
+
+.scroll-hint--visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+  animation: scroll-hint-drift 3.8s ease-in-out infinite;
+}
+
+.scroll-hint--used {
+  filter: blur(0.35rem);
+  opacity: 0;
+  transform: translate(-50%, 1.2rem) scale(0.96);
+}
+
+.scroll-hint__mouse {
+  position: relative;
+  display: block;
+  width: 1.45rem;
+  height: 2.2rem;
+  border: 1px solid rgba(247, 252, 255, 0.58);
+  border-radius: 999px;
+  box-shadow:
+    0 0 1.2rem rgba(var(--particle-rgb), 0.22),
+    inset 0 0 0.7rem rgba(247, 252, 255, 0.1);
+}
+
+.scroll-hint__wheel {
+  position: absolute;
+  top: 0.45rem;
+  left: 50%;
+  display: block;
+  width: 0.18rem;
+  height: 0.48rem;
+  background: rgba(247, 252, 255, 0.8);
+  border-radius: 999px;
+  transform: translateX(-50%);
+  animation: scroll-hint-wheel 1.65s ease-in-out infinite;
+}
+
+.scroll-hint__text {
+  font-size: 0.68rem;
+  font-weight: 700;
+}
 
 .entry {
   position: absolute;
@@ -185,5 +247,32 @@ body {
 
   50% {
     opacity: 1;
+  }
+}
+
+@keyframes scroll-hint-drift {
+  0%,
+  100% {
+    margin-bottom: 0;
+  }
+
+  50% {
+    margin-bottom: 0.38rem;
+  }
+}
+
+@keyframes scroll-hint-wheel {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -0.2rem);
+  }
+
+  35% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, 0.65rem);
   }
 }

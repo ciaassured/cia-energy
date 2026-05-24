@@ -9,6 +9,7 @@ const particlesCanvas = document.querySelector('#particles');
 const particlesContext = particlesCanvas.getContext('2d');
 const entry = document.querySelector('#entry');
 const status = document.querySelector('#status');
+const scrollHint = document.querySelector('#scroll-hint');
 const openSound = new Audio(`${import.meta.env.BASE_URL}audio/can-open.mp3`);
 openSound.preload = 'auto';
 const swooshSound = new Audio(`${import.meta.env.BASE_URL}audio/swoosh.mp3`);
@@ -103,6 +104,7 @@ scene.add(root);
 let particles = [];
 let activeCanIndex = 0;
 let wheelLock = false;
+let hintTimer;
 let isModelReady = false;
 let isMinimumTimeDone = false;
 let hasEntered = false;
@@ -138,6 +140,7 @@ window.addEventListener('wheel', (event) => {
   wheelLock = true;
   const direction = event.deltaY > 0 ? 1 : -1;
   setActiveCan(activeCanIndex + direction);
+  pulseScrollHint();
   playSwoosh().finally(unlockWheelAfterSwoosh);
 }, { passive: false });
 
@@ -155,6 +158,7 @@ entry.addEventListener('click', () => {
 
   setTimeout(() => {
     entry.hidden = true;
+    showScrollHint();
   }, 800);
 });
 
@@ -207,6 +211,22 @@ function unlockWheelAfterSwoosh() {
   }, Math.max(duration, 320));
 }
 
+function showScrollHint() {
+  if (!hasEntered) {
+    return;
+  }
+
+  scrollHint.classList.add('scroll-hint--visible');
+  scrollHint.classList.remove('scroll-hint--used');
+}
+
+function pulseScrollHint() {
+  scrollHint.classList.remove('scroll-hint--visible');
+  scrollHint.classList.add('scroll-hint--used');
+  clearTimeout(hintTimer);
+
+  hintTimer = setTimeout(showScrollHint, 1800);
+}
 function applyTheme(theme) {
   app.style.setProperty('--scene-primary', theme.primary);
   app.style.setProperty('--scene-mid', theme.mid);
