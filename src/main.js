@@ -12,6 +12,7 @@ const status = document.querySelector('#status');
 const scrollHint = document.querySelector('#scroll-hint');
 const currentBackground = document.querySelector('#scene-bg-current');
 const nextBackground = document.querySelector('#scene-bg-next');
+const favicon = document.querySelector('link[rel="icon"]');
 const openSound = new Audio(`${import.meta.env.BASE_URL}audio/can-open.mp3`);
 openSound.preload = 'auto';
 const swooshSound = new Audio(`${import.meta.env.BASE_URL}audio/swoosh.mp3`);
@@ -21,6 +22,7 @@ const app = document.querySelector('#app');
 const cans = [
   {
     model: 'models/cia-energy.glb',
+    favicon: 'favicons/can-adblue.svg',
     theme: {
       name: 'adblue',
       primary: '#00a1dc',
@@ -34,6 +36,7 @@ const cans = [
   },
   {
     model: 'models/cia-energy-91.glb',
+    favicon: 'favicons/can-91.svg',
     theme: {
       name: '91',
       primary: '#009b3a',
@@ -199,6 +202,7 @@ function setActiveCan(index) {
   });
 
   applyTheme(cans[activeCanIndex].theme);
+  updateFavicon(cans[activeCanIndex].favicon);
 }
 
 function playSwoosh() {
@@ -241,6 +245,10 @@ function applyTheme(theme) {
   app.style.setProperty('--particle-rgb', theme.particle);
   app.dataset.can = theme.name;
   animateBackgroundTheme(theme);
+}
+
+function updateFavicon(path) {
+  favicon.href = `${import.meta.env.BASE_URL}${path}`;
 }
 
 function animateBackgroundTheme(theme) {
