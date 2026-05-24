@@ -2,8 +2,8 @@
 
 const MAX_PIXEL_RATIO = 2; // Caps particle canvas resolution for performance on dense screens.
 const MOBILE_WIDTH_BREAKPOINT = 720; // Width below which the lighter mobile particle count is used.
-const MOBILE_PARTICLE_COUNT = 42; // Number of particles rendered on narrow screens.
-const DESKTOP_PARTICLE_COUNT = 78; // Number of particles rendered on wider screens.
+const MOBILE_PARTICLE_COUNT = 250; // Number of particles rendered on narrow screens.
+const DESKTOP_PARTICLE_COUNT = 500; // Number of particles rendered on wider screens.
 const MIN_RADIUS = 0.7; // Smallest particle radius in CSS pixels.
 const RADIUS_RANGE = 2.2; // Additional random radius added per particle.
 const MIN_DEPTH = 0.25; // Lowest parallax multiplier.
