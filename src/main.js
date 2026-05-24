@@ -10,6 +10,8 @@ const particlesContext = particlesCanvas.getContext('2d');
 const entry = document.querySelector('#entry');
 const status = document.querySelector('#status');
 const scrollHint = document.querySelector('#scroll-hint');
+const currentBackground = document.querySelector('#scene-bg-current');
+const nextBackground = document.querySelector('#scene-bg-next');
 const openSound = new Audio(`${import.meta.env.BASE_URL}audio/can-open.mp3`);
 openSound.preload = 'auto';
 const swooshSound = new Audio(`${import.meta.env.BASE_URL}audio/swoosh.mp3`);
@@ -105,6 +107,7 @@ let particles = [];
 let activeCanIndex = 0;
 let wheelLock = false;
 let hintTimer;
+let themeTransitionTimer;
 let isModelReady = false;
 let isMinimumTimeDone = false;
 let hasEntered = false;
@@ -227,6 +230,7 @@ function pulseScrollHint() {
 
   hintTimer = setTimeout(showScrollHint, 1800);
 }
+
 function applyTheme(theme) {
   app.style.setProperty('--scene-primary', theme.primary);
   app.style.setProperty('--scene-mid', theme.mid);
@@ -236,6 +240,36 @@ function applyTheme(theme) {
   app.style.setProperty('--scene-shadow', theme.shadow);
   app.style.setProperty('--particle-rgb', theme.particle);
   app.dataset.can = theme.name;
+  animateBackgroundTheme(theme);
+}
+
+function animateBackgroundTheme(theme) {
+  const background = buildSceneBackground(theme);
+
+  clearTimeout(themeTransitionTimer);
+
+  if (!currentBackground.style.background) {
+    currentBackground.style.background = background;
+    return;
+  }
+
+  nextBackground.style.background = background;
+  app.classList.add('is-theme-switching');
+
+  themeTransitionTimer = setTimeout(() => {
+    currentBackground.style.background = background;
+    app.classList.remove('is-theme-switching');
+  }, 700);
+}
+
+function buildSceneBackground(theme) {
+  return `
+    radial-gradient(circle at 50% 46%, rgba(255, 255, 255, 0.24), transparent 13rem),
+    radial-gradient(circle at 50% 50%, ${theme.core}, transparent 26rem),
+    radial-gradient(circle at 18% 15%, ${theme.glow}, transparent 28rem),
+    radial-gradient(circle at 84% 82%, ${theme.shadow}, transparent 30rem),
+    linear-gradient(145deg, ${theme.primary} 0%, ${theme.mid} 43%, ${theme.dark} 100%)
+  `;
 }
 
 function sharpenModelTextures(model) {

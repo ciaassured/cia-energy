@@ -38,20 +38,61 @@ body {
   position: relative;
   min-height: 100vh;
   overflow: hidden;
+  background: var(--scene-dark);
+}
+
+.scene-bg,
+#app::after,
+#app::before {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.scene-bg {
+  z-index: 0;
   background:
     radial-gradient(circle at 50% 46%, rgba(255, 255, 255, 0.24), transparent 13rem),
     radial-gradient(circle at 50% 50%, var(--scene-core), transparent 26rem),
     radial-gradient(circle at 18% 15%, var(--scene-glow), transparent 28rem),
     radial-gradient(circle at 84% 82%, var(--scene-shadow), transparent 30rem),
     linear-gradient(145deg, var(--scene-primary) 0%, var(--scene-mid) 43%, var(--scene-dark) 100%);
-  transition: background 520ms ease;
+}
+
+.scene-bg--current {
+  opacity: 1;
+}
+
+.scene-bg--next {
+  opacity: 0;
+  transform: scale(1.04);
+  transition:
+    opacity 700ms ease,
+    transform 900ms ease;
+}
+
+#app.is-theme-switching .scene-bg--next {
+  opacity: 1;
+  transform: scale(1);
+}
+
+#app::before {
+  z-index: 0;
+  content: "";
+  background:
+    radial-gradient(circle at 50% 48%, rgba(255, 255, 255, 0.15), transparent 12rem),
+    radial-gradient(circle at 50% 54%, rgba(var(--particle-rgb), 0.16), transparent 28rem);
+  mix-blend-mode: screen;
+  opacity: 0;
+  transform: scale(0.74);
+}
+
+#app.is-theme-switching::before {
+  animation: theme-wash 760ms ease-out;
 }
 
 #app::after {
-  position: absolute;
-  inset: 0;
   z-index: 0;
-  pointer-events: none;
   content: "";
   background:
     radial-gradient(ellipse at center, transparent 0%, transparent 45%, rgba(0, 20, 42, 0.32) 100%),
@@ -82,6 +123,7 @@ body {
 #scene:active {
   cursor: grabbing;
 }
+
 .scroll-hint {
   position: absolute;
   bottom: clamp(1.35rem, 4vh, 2.6rem);
@@ -274,5 +316,21 @@ body {
   100% {
     opacity: 0;
     transform: translate(-50%, 0.65rem);
+  }
+}
+
+@keyframes theme-wash {
+  0% {
+    opacity: 0;
+    transform: scale(0.74);
+  }
+
+  38% {
+    opacity: 0.75;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.35);
   }
 }
