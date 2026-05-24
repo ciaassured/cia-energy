@@ -1,3 +1,5 @@
+/* Base */
+
 :root {
   color: #f7fcff;
   background: #00a1dc;
@@ -52,6 +54,8 @@ body {
     min-height: 100svh;
   }
 }
+
+/* Scene Shell */
 
 .scene-bg,
 #app::after,
@@ -111,6 +115,8 @@ body {
     linear-gradient(90deg, rgba(255, 255, 255, 0.08), transparent 18%, transparent 82%, rgba(255, 255, 255, 0.05));
 }
 
+/* Canvases */
+
 #particles,
 #scene {
   position: absolute;
@@ -135,6 +141,8 @@ body {
 #scene:active {
   cursor: grabbing;
 }
+
+/* Switch Hint */
 
 .scroll-hint {
   position: absolute;
@@ -206,6 +214,8 @@ body {
   white-space: nowrap;
 }
 
+/* Entry Gate */
+
 .entry {
   position: absolute;
   inset: 0;
@@ -230,48 +240,6 @@ body {
     opacity 760ms ease,
     filter 760ms ease,
     transform 760ms ease;
-}
-
-@media (hover: none), (pointer: coarse) {
-  .scroll-hint {
-    bottom: calc(1.15rem + env(safe-area-inset-bottom, 0px));
-    min-width: 7.75rem;
-    min-height: 2.75rem;
-    place-items: center;
-    padding: 0.82rem 1rem;
-    color: rgba(247, 252, 255, 0.88);
-    background: rgba(0, 32, 58, 0.2);
-    border: 1px solid rgba(247, 252, 255, 0.24);
-    border-radius: 999px;
-    box-shadow:
-      0 0.8rem 2rem rgba(0, 26, 49, 0.18),
-      inset 0 0 1rem rgba(247, 252, 255, 0.08);
-    letter-spacing: 0.12em;
-    pointer-events: auto;
-    touch-action: manipulation;
-  }
-
-  .scroll-hint--visible {
-    animation: none;
-  }
-
-  .scroll-hint__mouse {
-    display: none;
-  }
-
-  .scroll-hint__text {
-    font-size: 0.72rem;
-  }
-
-  .entry__prompt {
-    font-size: clamp(0.82rem, 4vw, 1rem);
-    letter-spacing: 0.16em;
-  }
-
-  .entry--ready:hover .entry__prompt,
-  .entry--ready:focus-visible .entry__prompt {
-    letter-spacing: 0.18em;
-  }
 }
 
 .entry::before {
@@ -333,6 +301,52 @@ body {
     0 0 2.4rem rgba(133, 234, 255, 0.52);
   transform: scale(1.04);
 }
+
+/* Touch Layout */
+
+@media (hover: none), (pointer: coarse) {
+  .scroll-hint {
+    bottom: calc(1.15rem + env(safe-area-inset-bottom, 0px));
+    min-width: 7.75rem;
+    min-height: 2.75rem;
+    place-items: center;
+    padding: 0.82rem 1rem;
+    color: rgba(247, 252, 255, 0.88);
+    background: rgba(0, 32, 58, 0.2);
+    border: 1px solid rgba(247, 252, 255, 0.24);
+    border-radius: 999px;
+    box-shadow:
+      0 0.8rem 2rem rgba(0, 26, 49, 0.18),
+      inset 0 0 1rem rgba(247, 252, 255, 0.08);
+    letter-spacing: 0.12em;
+    pointer-events: auto;
+    touch-action: manipulation;
+  }
+
+  .scroll-hint--visible {
+    animation: none;
+  }
+
+  .scroll-hint__mouse {
+    display: none;
+  }
+
+  .scroll-hint__text {
+    font-size: 0.72rem;
+  }
+
+  .entry__prompt {
+    font-size: clamp(0.82rem, 4vw, 1rem);
+    letter-spacing: 0.16em;
+  }
+
+  .entry--ready:hover .entry__prompt,
+  .entry--ready:focus-visible .entry__prompt {
+    letter-spacing: 0.18em;
+  }
+}
+
+/* Animations */
 
 @keyframes pulse-ring {
   0%,
